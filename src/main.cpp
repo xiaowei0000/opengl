@@ -16,6 +16,7 @@ namespace fs=std::filesystem;
 #include<tool/VBO.h>
 #include<tool/EBO.h>
 #include<tool/Texture.h>
+#include<tool/camera.h>
  GLfloat vertices[]={
 	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
 	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
@@ -54,7 +55,7 @@ namespace fs=std::filesystem;
 
         glViewport(0,0,800,800);
 
-        Shader shaderProgram("glsl\\3d\\default.vert","glsl\\3d\\default.frag");
+        Shader shaderProgram("glsl\\camera\\default.vert","glsl\\camera\\default.frag");
 
         VAO VAO1;
         VAO1.Bind();
@@ -72,7 +73,7 @@ namespace fs=std::filesystem;
         VBO1.Unbind();
         EBO1.Unbind();
 
-        GLuint uniID=glGetUniformLocation(shaderProgram.ID,"scale");
+        //GLuint uniID=glGetUniformLocation(shaderProgram.ID,"scale");
 
         std::string parentDir=(fs::current_path().fs::path::parent_path().string());
         std::string texPath="\\OPENGLLEARN\\resources\\brick.png";
@@ -84,6 +85,8 @@ namespace fs=std::filesystem;
         double prevTime=glfwGetTime();
 
         glEnable(GL_DEPTH_TEST);
+
+        Camera camera(width,height,glm::vec3(0.0f,0.0f,2.0f));
 
         while (!glfwWindowShouldClose(window))
         {
@@ -100,23 +103,10 @@ namespace fs=std::filesystem;
                 prevTime=crntTime;
             }
             //初始化矩阵
-            glm::mat4 model=glm::mat4(1.0f);
-            glm::mat4 view=glm::mat4(1.0f);
-            glm::mat4 proj=glm::mat4(1.0f);
-            //分配矩阵
-            model=glm::rotate(model,glm::radians(rotation),glm::vec3(0.0f,1.0f,0.0f));
-            view=glm::translate(view,glm::vec3(0.0f,-0.5f,-2.0f));
-            proj=glm::perspective(glm::radians(45.0f),(float)width/height,0.1f,100.0f);
 
-            //向shader传入矩阵数据
-            int modelLoc=glGetUniformLocation(shaderProgram.ID,"model");
-            glUniformMatrix4fv(modelLoc,1,GL_FALSE,glm::value_ptr(model));
-            int viewLoc=glGetUniformLocation(shaderProgram.ID,"view");
-            glUniformMatrix4fv(viewLoc,1,GL_FALSE,glm::value_ptr(model));
-            int projLoc=glGetUniformLocation(shaderProgram.ID,"proj");
-            glUniformMatrix4fv(projLoc,1,GL_FALSE,glm::value_ptr(proj));          
+            camera.Inputs(window);
 
-            glUniform1f(uniID,0.5f);
+            camera.Matrix(45.0f,0.1f,100.0f,shaderProgram,"camMatrix");
             
             popCat.Bind();
             

@@ -4,6 +4,7 @@
         "string": "cpp",
         "cmath": "cpp",
         "filesystem": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "sstream": "cpp"
     }
 }

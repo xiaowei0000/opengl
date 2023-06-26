@@ -53,7 +53,7 @@ LIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
 
 # define the C source files
 SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
-SOURCES	+= include/tool/shaderClass.cpp include/tool/VAO.cpp include/tool/VBO.cpp include/tool/EBO.cpp include/tool/Texture.cpp
+SOURCES	+= include/tool/shaderClass.cpp include/tool/VAO.cpp include/tool/VBO.cpp include/tool/EBO.cpp include/tool/Texture.cpp include/tool/camera.cpp
 # define the C object files
 OBJECTS		:= $(SOURCES:.cpp=.o)
 
